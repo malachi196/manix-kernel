@@ -1,6 +1,8 @@
 [bits 16]		;real mode
 [org 0x7c00]		;start program near BIOS
 
+mov [BOOT_DRIVE], dl
+
 _start:
     cli
     
@@ -12,7 +14,7 @@ _start:
     sti
     
     mov ah, 0x0E
-    mov al, 'A'		;print A to tell file has loaded
+    mov al, 'A'		; print A to tell file has loaded
     int 0x10
     
     mov al, '2'
@@ -24,7 +26,7 @@ _start:
     mov dh, 0
     mov cl, 2
     mov dl, 0x80
-    int 0x13
+    int 0x13      ; initialize sector stuff
     jc disk_error
     
     mov ah, 0x0E
@@ -35,9 +37,11 @@ _start:
 
 disk_error:
     mov ah, 0x0E
-    mov al, 'E'
+    mov al, 'E'     ; 'E' prints if file fails
     int 0x10
     hlt
+
+BOOT_DRIVE db 0
 
 times 510-($-$$) db 0
 dw 0xAA55

@@ -1,5 +1,5 @@
 # manix project
-This is a custom kernel/bootloader project.
+This is a home-brew kernel/bootloader project.
 
 &nbsp;
 

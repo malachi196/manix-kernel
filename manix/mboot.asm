@@ -8,9 +8,9 @@ _start:
     
     xor ax, ax           ; Clear AX (set to 0)
     mov ss, ax           ; Stack segment
-    mov sp, 0x7C00       ; Stack starts at the top of the bootloader
     mov ds, ax           ; Data segment  
     mov es, ax           ; Extra segment
+    mov sp, 0x8000
     sti
     
     mov ah, 0x0E
@@ -20,20 +20,23 @@ _start:
     mov al, '2'
     int 0x10
     
-    mov ah, 0x02
-    mov al, 1
-    mov ch, 0
-    mov dh, 0
-    mov cl, 2
-    mov dl, 0x80
-    int 0x13      ; initialize sector stuff
-    jc disk_error
+    mov ax, 0x1000  ; target segment 0x1000
+    mov es, ax
+    xor bx, bx
+    mov ah, 0x02   ; BIOS read sectors
+    mov al, 1    ; number of sectors to read
+    mov ch, 0    ; cylinder 0
+    mov dh, 0    ; head 0
+    mov cl, 2    ; sector 2
+    mov dl, [BOOT_DRIVE]
+    int 0x13      ; initialize sector stuff via BIOS interrupt
+    jc disk_error  ; on carry: fail
     
-    mov ah, 0x0E
+    mov ah, 0x0E 
     mov al, 'B'
-    int 0x10
+    int 0x10   ;print "B" on kernel load
     
-    jmp 0x0000:0x1000	;attempt to open kernel
+    jmp 0x1000:0x0000	;attempt to open kernel
 
 disk_error:
     mov ah, 0x0E

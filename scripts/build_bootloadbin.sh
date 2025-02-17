@@ -1,3 +1,3 @@
 #!/bin/bash
 
-nasm -f bin -o mboot.bin mboot.asm
+nasm -f bin -o ../manix/mboot.bin ../manix/mboot.asm

@@ -94,7 +94,7 @@ void terminal_writestring(const char* data)
 	terminal_write(data, strlen(data));
 }
 
-void _start(void) 
+void _kernelstart(void) 
 {
 	/* Initialize terminal interface */
 	terminal_initialize();
